@@ -70,4 +70,4 @@ I would ask the AI to explain its reasoning before applying any fix to logic-rel
 
 - In one or two sentences, describe how this project changed the way you think about AI generated code.
 
-AI-generated code can look completely correct at a glance — clean structure, reasonable variable names, plausible logic — while containing subtle bugs that only appear under specific conditions, like the string-coercion trick that only triggered on even-numbered attempts. This project taught me to treat AI output the same way I would treat code written by a new teammate: readable first pass, but always verify the behavior against tests and the actual running program before trusting it.
+AI-generated code can look completely correct at a glance with clean structure, reasonable variable names, plausible logic, while containing subtle bugs that only appear under specific conditions, like the string-coercion trick that only triggered on even-numbered attempts. This project taught me to treat AI output the same way I would treat code written by a new teammate: readable first pass, but always verify the behavior against tests and the actual running program before trusting it.
