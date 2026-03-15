@@ -54,11 +54,20 @@ Yes. Claude Code wrote all four new pytest cases targeting the two bugs. It expl
 
 - How would you explain Streamlit "reruns" and session state to a friend who has never used Streamlit?
 
+Every time you interact with a Streamlit app — clicking a button, typing in a text box — the entire Python script reruns from top to bottom, like pressing refresh on a webpage. That means any regular variable you create gets thrown away and recreated from scratch on each rerun. `st.session_state` is Streamlit's solution: it is a dictionary that persists across reruns, so values you store there survive button clicks and page refreshes. The bug in this project was that clicking "New Game" reset the secret number but forgot to also reset `status` and `history` in `session_state`, so the game was still recorded as won or lost even after a fresh secret was generated. Think of `session_state` like a sticky note attached to the browser tab — everything else on the whiteboard gets erased each rerun, but the sticky note stays until you explicitly clear it.
+
 ---
 
 ## 5. Looking ahead: your developer habits
 
 - What is one habit or strategy from this project that you want to reuse in future labs or projects?
-  - This could be a testing habit, a prompting strategy, or a way you used Git.
+
+Writing regression tests that target the exact input that exposed a bug — not just any input that tests the general behavior. The test `test_hint_not_inverted_by_string_comparison` uses `guess=3, secret=50` specifically because those values make the difference between string and integer comparison visible (`"3" > "50"` is `True` while `3 > 50` is `False`). A generic test like `check_guess(40, 50)` would also pass after the fix, but it would not have caught the bug in the first place. Pinning the test to the failure case means it will catch any future regression that re-introduces the same flaw.
+
 - What is one thing you would do differently next time you work with AI on a coding task?
+
+I would ask the AI to explain its reasoning before applying any fix to logic-related bugs, rather than reviewing the change after the fact. When Claude first suggested swapping the hint message strings, I accepted the edit and then had to undo it once I traced the actual root cause. If I had asked "why does swapping the strings fix this?" upfront, I would have immediately seen that the explanation did not hold for odd-numbered attempts and caught the mistake before touching the file. Slowing down to question the AI's reasoning at the start is faster overall than cleaning up a wrong fix later.
+
 - In one or two sentences, describe how this project changed the way you think about AI generated code.
+
+AI-generated code can look completely correct at a glance — clean structure, reasonable variable names, plausible logic — while containing subtle bugs that only appear under specific conditions, like the string-coercion trick that only triggered on even-numbered attempts. This project taught me to treat AI output the same way I would treat code written by a new teammate: readable first pass, but always verify the behavior against tests and the actual running program before trusting it.
